@@ -16,6 +16,7 @@ const URLS = [
   "https://marinarunclub.com/products/marina-run-club-membership-dues",
 ];
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function addColorToEvents(events: any[]): any[] {
   const color = getRandomTailwindBgClass();
   return events.map((event) => ({

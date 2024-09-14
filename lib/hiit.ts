@@ -2,6 +2,7 @@ import { HIIT_VENUE } from "./constants";
 import { Event } from "./types";
 
 // Function to fetch data from the API
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function fetchScheduleData(venue: number, date: string): Promise<any> {
   const res = await fetch("https://classpass.com/_api/v3/search/schedules", {
     method: "POST",
@@ -21,35 +22,39 @@ async function fetchScheduleData(venue: number, date: string): Promise<any> {
 }
 
 // Function to parse the fetched data into Event[] format and filter out "Boxing" events
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function parseEvents(data: any): Event[] {
-  return data.schedules
-    .filter(
-      (schedule: any) => !schedule.class.name.toLowerCase().includes("boxing")
-    ) // Filter out events with "Boxing"
-    .map((schedule: any) => {
-      const classInfo = schedule.class;
-      const venueInfo = schedule.venue;
-      const trainerName = schedule.teacher?.name || "Unknown Trainer"; // Fetch the trainer name, default to 'Unknown Trainer'
-      const locationName = venueInfo.location?.name || "Unknown Location"; // Fetch the location name, default to 'Unknown'
+  return (
+    data.schedules
+      .filter(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (schedule: any) => !schedule.class.name.toLowerCase().includes("boxing")
+      ) // Filter out events with "Boxing"
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .map((schedule: any) => {
+        const classInfo = schedule.class;
+        const venueInfo = schedule.venue;
+        const trainerName = schedule.teacher?.name || "Unknown Trainer"; // Fetch the trainer name, default to 'Unknown Trainer'
+        const locationName = venueInfo.location?.name || "Unknown Location"; // Fetch the location name, default to 'Unknown'
 
-      // Convert Unix timestamps to human-readable time (HH:MM AM/PM)
-      const startTime = new Date(schedule.starttime * 1000).toLocaleTimeString(
-        "en-US",
-        {
+        // Convert Unix timestamps to human-readable time (HH:MM AM/PM)
+        const startTime = new Date(
+          schedule.starttime * 1000
+        ).toLocaleTimeString("en-US", {
           hour: "2-digit",
           minute: "2-digit",
-        }
-      );
+        });
 
-      // Convert the start time to the corresponding day (0 for Monday, 6 for Sunday)
-      const day = new Date(schedule.starttime * 1000).getDay();
+        // Convert the start time to the corresponding day (0 for Monday, 6 for Sunday)
+        const day = new Date(schedule.starttime * 1000).getDay();
 
-      return {
-        title: `${classInfo.name} - ${locationName} (${trainerName})`, // Append the location name and trainer name to the title
-        time: startTime,
-        day: day === 0 ? 6 : day - 1, // Adjust so that 0 is Monday, 6 is Sunday
-      };
-    });
+        return {
+          title: `${classInfo.name} - ${locationName} (${trainerName})`, // Append the location name and trainer name to the title
+          time: startTime,
+          day: day === 0 ? 6 : day - 1, // Adjust so that 0 is Monday, 6 is Sunday
+        };
+      })
+  );
 }
 
 // Function to get HIIT events for a specific date
