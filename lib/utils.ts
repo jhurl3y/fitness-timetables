@@ -1,7 +1,14 @@
-import { COLORS } from "./constants";
-
 export function getRandomTailwindBgClass(): string {
-  const colors = Object.keys(COLORS);
+  const colors = [
+    "blue",
+    "red",
+    "green",
+    "yellow",
+    "purple",
+    "pink",
+    "indigo",
+    "gray",
+  ];
 
   // Randomly pick a color from the colors array
   const randomColor = colors[Math.floor(Math.random() * colors.length)];

@@ -1,10 +1,23 @@
 "use client"
 import React, { useEffect, useState } from 'react';
+import { Event } from '../../lib/types';
 import { days } from '../../lib/constants';
 import { convertTimeTo24Hour } from '../../lib/time';
-import { EventWithColor } from '../../lib/types';
-import { COLORS } from '../../lib/constants';
 
+const COLORS = {
+  "blue": "bg-blue-100",
+  "red": "bg-red-100",
+  "green": "bg-green-100",
+  "yellow": "bg-yellow-100",
+  "purple": "bg-purple-100",
+  "pink": "bg-pink-100",
+  "indigo": "bg-indigo-100",
+  "gray": "bg-gray-100"
+};
+
+type EventWithColor = Event & {
+  color: keyof typeof COLORS; // Narrow the color type to match the COLORS keys
+}
 
 const Timetable: React.FC = () => {
   const [events, setEvents] = useState<EventWithColor[]>([]);
