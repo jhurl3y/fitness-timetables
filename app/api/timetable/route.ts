@@ -1,4 +1,6 @@
 import { Event } from "../../../lib/types";
+import { generateEvents } from "../../../lib/openai";
+import { getHTMLFromURL } from "../../../lib/scraping";
 
 /**
  * The runtime environment.
@@ -8,12 +10,11 @@ import { Event } from "../../../lib/types";
 export const runtime = "edge";
 
 export async function GET(request: Request) {
-  const events: Event[] = [
-    { title: "Jiu Jitsu Class", time: "10:00 AM", day: 0 },
-    { title: "Meeting with Team", time: "2:00 PM", day: 3 },
-  ];
-
   try {
+    const htmlContent = await getHTMLFromURL(
+      "https://www.romulomelobjj.com/schedule-pricing"
+    );
+    const events = await generateEvents(htmlContent);
     return new Response(JSON.stringify({ data: events }), {
       headers: {
         "Content-Type": "application/json",
