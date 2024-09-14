@@ -3,6 +3,7 @@ import { getHTMLFromURL } from "../../../lib/scraping";
 import { formatTime } from "../../../lib/time";
 import { getWeeklyHIITEvents } from "../../../lib/hiit";
 import { getRandomTailwindBgClass } from "../../../lib/utils";
+import { Event } from "../../../lib/types";
 
 /**
  * The runtime environment.
@@ -16,7 +17,8 @@ const URLS = [
   "https://marinarunclub.com/products/marina-run-club-membership-dues",
 ];
 
-function addColorToEvents(events: any[]): any[] {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function addColorToEvents(events: Event[]): any[] {
   const color = getRandomTailwindBgClass();
   return events.map((event) => ({
     ...event,
