@@ -14,7 +14,7 @@ const URLS = [
   "https://marinarunclub.com/products/marina-run-club-membership-dues",
 ];
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     const eventsArray = await Promise.all(
       URLS.map(async (url) => {

@@ -12,10 +12,11 @@ export function formatTime(events: Event[]) {
 export const convertTimeTo24Hour = (time: string) => {
   const timeLower = time.toLowerCase(); // Normalize to lowercase
   const [timePart, modifier] = timeLower.split(" ");
-  let [hours, minutes] = timePart.split(":").map(Number);
+  const [hours, minutes] = timePart.split(":").map(Number); // Use 'const' instead of 'let'
 
-  if (modifier === "pm" && hours !== 12) hours += 12;
-  if (modifier === "am" && hours === 12) hours = 0;
+  let adjustedHours = hours;
+  if (modifier === "pm" && hours !== 12) adjustedHours += 12;
+  if (modifier === "am" && hours === 12) adjustedHours = 0;
 
-  return hours * 60 + (minutes || 0); // Return total minutes for easier comparison
+  return adjustedHours * 60 + (minutes || 0); // Return total minutes for easier comparison
 };

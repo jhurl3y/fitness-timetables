@@ -13,6 +13,7 @@ export async function generateCompletion(
   prompt: string,
   model: string,
   max_tokens: number = 1000,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   response_format: any
 ): Promise<{ events: Event[] }> {
   if (!prompt) {
