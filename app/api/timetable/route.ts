@@ -1,6 +1,6 @@
-import { Event } from "../../../lib/types";
 import { generateEvents } from "../../../lib/openai";
 import { getHTMLFromURL } from "../../../lib/scraping";
+import { formatTime } from "../../../lib/time";
 
 /**
  * The runtime environment.
@@ -9,13 +9,23 @@ import { getHTMLFromURL } from "../../../lib/scraping";
  */
 export const runtime = "edge";
 
+const URLS = [
+  "https://www.romulomelobjj.com/schedule-pricing",
+  "https://marinarunclub.com/products/marina-run-club-membership-dues",
+];
+
 export async function GET(request: Request) {
   try {
-    const htmlContent = await getHTMLFromURL(
-      "https://www.romulomelobjj.com/schedule-pricing"
+    const eventsArray = await Promise.all(
+      URLS.map(async (url) => {
+        const htmlContent = await getHTMLFromURL(url);
+        const events = await generateEvents(htmlContent);
+        return events ? events : [];
+      })
     );
-    const events = await generateEvents(htmlContent);
-    return new Response(JSON.stringify({ data: events }), {
+    const formattedEvents = formatTime(eventsArray.flat());
+
+    return new Response(JSON.stringify({ data: formattedEvents }), {
       headers: {
         "Content-Type": "application/json",
         "Cache-Control": "s-maxage=300, stale-while-revalidate",

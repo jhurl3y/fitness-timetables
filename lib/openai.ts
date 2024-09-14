@@ -43,7 +43,7 @@ export async function generateEvents(
   const eventTypeStructure = `
   title: string; // The name of the class or event
   time: string;  // The time the event takes place
-  day: number;   // The day of the week as a number where 0 = Monday, 1 = Tuesday, etc.
+  day: number;   // The day of the week as a number where 0 = Monday, 1 = Tuesday, 2 = Wednesday, 3 = Thursday, 4 = Friday, 5 = Saturday, 6 = Sunday.
 `;
 
   const exampleEvent = `
