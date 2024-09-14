@@ -1,6 +1,7 @@
 import { generateEvents } from "../../../lib/openai";
 import { getHTMLFromURL } from "../../../lib/scraping";
 import { formatTime } from "../../../lib/time";
+import { getWeeklyHIITEvents } from "../../../lib/hiit";
 
 /**
  * The runtime environment.
@@ -23,9 +24,12 @@ export async function GET() {
         return events ? events : [];
       })
     );
-    const formattedEvents = formatTime(eventsArray.flat());
 
-    return new Response(JSON.stringify({ data: formattedEvents }), {
+    // Fetch the HIIT events for the week
+    const weeklyHIITEvents = await getWeeklyHIITEvents();
+
+    const allEvents = formatTime([...eventsArray.flat(), ...weeklyHIITEvents]);
+    return new Response(JSON.stringify({ data: allEvents }), {
       headers: {
         "Content-Type": "application/json",
         "Cache-Control": "s-maxage=300, stale-while-revalidate",

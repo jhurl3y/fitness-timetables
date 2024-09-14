@@ -89,7 +89,6 @@ export async function getWeeklyHIITEvents(): Promise<Event[]> {
   const monday = getNextMonday(); // Get the Monday of the current week
   const weekDates = generateWeekDates(monday); // Generate a list of dates from Monday to Sunday
 
-  console.log(weekDates);
   const allEvents: Event[] = [];
   for (const date of weekDates) {
     const dailyEvents = await getHIITEvents(date); // Get events for each day
