@@ -2,6 +2,7 @@ import { generateEvents } from "../../../lib/openai";
 import { getHTMLFromURL } from "../../../lib/scraping";
 import { formatTime } from "../../../lib/time";
 import { getWeeklyHIITEvents } from "../../../lib/hiit";
+import { getRandomTailwindBgClass } from "../../../lib/utils";
 
 /**
  * The runtime environment.
@@ -15,20 +16,34 @@ const URLS = [
   "https://marinarunclub.com/products/marina-run-club-membership-dues",
 ];
 
+function addColorToEvents(events: any[]): any[] {
+  const color = getRandomTailwindBgClass();
+  return events.map((event) => ({
+    ...event,
+    color,
+  }));
+}
+
 export async function GET() {
   try {
     const eventsArray = await Promise.all(
       URLS.map(async (url) => {
         const htmlContent = await getHTMLFromURL(url);
         const events = await generateEvents(htmlContent);
-        return events ? events : [];
+
+        // Add random background color to each event
+        return events ? addColorToEvents(events) : [];
       })
     );
 
     // Fetch the HIIT events for the week
     const weeklyHIITEvents = await getWeeklyHIITEvents();
 
-    const allEvents = formatTime([...eventsArray.flat(), ...weeklyHIITEvents]);
+    const allEvents = formatTime([
+      ...eventsArray.flat(),
+      ...addColorToEvents(weeklyHIITEvents),
+    ]);
+
     return new Response(JSON.stringify({ data: allEvents }), {
       headers: {
         "Content-Type": "application/json",
