@@ -3,6 +3,7 @@ import { getHTMLFromURL } from "../../../lib/scraping";
 import { formatTime } from "../../../lib/time";
 import { getWeeklyHIITEvents } from "../../../lib/hiit";
 import { getRandomTailwindBgClass } from "../../../lib/utils";
+// import { schedule } from "../../../data/schedule";
 
 /**
  * The runtime environment.

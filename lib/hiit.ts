@@ -37,12 +37,13 @@ function parseEvents(data: any): Event[] {
         const trainerName = schedule.teacher?.name || "Unknown Trainer"; // Fetch the trainer name, default to 'Unknown Trainer'
         const locationName = venueInfo.location?.name || "Unknown Location"; // Fetch the location name, default to 'Unknown'
 
-        // Convert Unix timestamps to human-readable time (HH:MM AM/PM)
+        // Convert Unix timestamps to human-readable time (HH:MM AM/PM) in Pacific Time (PST/PDT)
         const startTime = new Date(
           schedule.starttime * 1000
         ).toLocaleTimeString("en-US", {
           hour: "2-digit",
           minute: "2-digit",
+          timeZone: "America/Los_Angeles", // Force the time zone to be PST/PDT
         });
 
         // Convert the start time to the corresponding day (0 for Monday, 6 for Sunday)
@@ -58,7 +59,7 @@ function parseEvents(data: any): Event[] {
 }
 
 // Function to get HIIT events for a specific date
-export async function getHIITEvents(date: string): Promise<Event[]> {
+async function getHIITEvents(date: string): Promise<Event[]> {
   const data = await fetchScheduleData(HIIT_VENUE, date);
   return parseEvents(data);
 }
