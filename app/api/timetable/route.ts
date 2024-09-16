@@ -1,4 +1,4 @@
-import { generateEvents } from "../../../lib/openai";
+import { generateEvents } from "../../../lib/events";
 import { getHTMLFromURL } from "../../../lib/scraping";
 import { formatTime } from "../../../lib/time";
 import { getWeeklyHIITEvents } from "../../../lib/hiit";

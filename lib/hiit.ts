@@ -1,4 +1,5 @@
 import { HIIT_VENUE } from "./constants";
+import { generateCustomWeekDates } from "./time";
 import { Event } from "./types";
 
 // Function to fetch data from the API
@@ -59,51 +60,14 @@ function parseEvents(data: any): Event[] {
   );
 }
 
-// Function to get HIIT events for a specific date
-async function getHIITEvents(date: string): Promise<Event[]> {
-  const data = await fetchScheduleData(HIIT_VENUE, date);
-  return parseEvents(data);
-}
-
-function generateCustomWeekDates(): string[] {
-  const today = new Date();
-  const currentDay = today.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-
-  // Array to store the final week dates
-  const dates: string[] = [];
-
-  // Generate dates from today until Sunday (remaining days of the current week)
-  for (let i = currentDay; i <= 6; i++) {
-    const currentDate = new Date(today);
-    currentDate.setDate(today.getDate() + (i - currentDay)); // Offset from today
-    dates.push(formatDateYYYYMMDD(currentDate));
-  }
-
-  // Generate dates from the following Monday to yesterday (preceding days from the following week)
-  for (let i = 0; i < currentDay; i++) {
-    const currentDate = new Date(today);
-    currentDate.setDate(today.getDate() + (7 - currentDay) + i); // Offset to next Monday
-    dates.push(formatDateYYYYMMDD(currentDate));
-  }
-
-  return dates;
-}
-
-// Helper function to format date as "YYYY-MM-DD"
-function formatDateYYYYMMDD(date: Date): string {
-  const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Month is zero-based
-  const day = date.getDate().toString().padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
 // Function to get all HIIT events for the week (Monday to Sunday)
 export async function getWeeklyHIITEvents(): Promise<Event[]> {
   const weekDates = generateCustomWeekDates(); // Generate a list of dates from Monday to Sunday
 
   const allEvents: Event[] = [];
   for (const date of weekDates) {
-    const dailyEvents = await getHIITEvents(date); // Get events for each day
+    const data = await fetchScheduleData(HIIT_VENUE, date);
+    const dailyEvents = parseEvents(data);
     allEvents.push(...dailyEvents); // Append daily events to the full list
   }
 
