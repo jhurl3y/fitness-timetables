@@ -65,36 +65,41 @@ async function getHIITEvents(date: string): Promise<Event[]> {
   return parseEvents(data);
 }
 
-function getNextMonday(): Date {
+function generateCustomWeekDates(): string[] {
   const today = new Date();
-  const day = today.getDay(); // Sunday is 0, Monday is 1, ..., Saturday is 6
+  const currentDay = today.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
 
-  if (day === 1) {
-    // If today is Monday, return today's date
-    return today;
-  } else {
-    // Otherwise, calculate the date of the next Monday
-    const distanceToNextMonday = day === 0 ? 1 : 8 - day; // If today is Sunday, move to next day (Monday), otherwise move to the next Monday
-    today.setDate(today.getDate() + distanceToNextMonday);
-    today.setHours(0, 0, 0, 0); // Set time to the start of the day
-    return today;
+  // Array to store the final week dates
+  const dates: string[] = [];
+
+  // Generate dates from today until Sunday (remaining days of the current week)
+  for (let i = currentDay; i <= 6; i++) {
+    const currentDate = new Date(today);
+    currentDate.setDate(today.getDate() + (i - currentDay)); // Offset from today
+    dates.push(formatDateYYYYMMDD(currentDate));
   }
+
+  // Generate dates from the following Monday to yesterday (preceding days from the following week)
+  for (let i = 0; i < currentDay; i++) {
+    const currentDate = new Date(today);
+    currentDate.setDate(today.getDate() + (7 - currentDay) + i); // Offset to next Monday
+    dates.push(formatDateYYYYMMDD(currentDate));
+  }
+
+  return dates;
 }
 
-function generateWeekDates(monday: Date): string[] {
-  const dates = [];
-  for (let i = 0; i < 7; i++) {
-    const currentDate = new Date(monday);
-    currentDate.setDate(monday.getDate() + i);
-    dates.push(currentDate.toISOString().split("T")[0]); // Format date as YYYY-MM-DD
-  }
-  return dates;
+// Helper function to format date as "YYYY-MM-DD"
+function formatDateYYYYMMDD(date: Date): string {
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Month is zero-based
+  const day = date.getDate().toString().padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 // Function to get all HIIT events for the week (Monday to Sunday)
 export async function getWeeklyHIITEvents(): Promise<Event[]> {
-  const monday = getNextMonday(); // Get the Monday of the current week
-  const weekDates = generateWeekDates(monday); // Generate a list of dates from Monday to Sunday
+  const weekDates = generateCustomWeekDates(); // Generate a list of dates from Monday to Sunday
 
   const allEvents: Event[] = [];
   for (const date of weekDates) {
