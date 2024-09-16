@@ -28,6 +28,18 @@ function addColorToEvents(events: Event[]): EventWithColor[] {
   });
 }
 
+// TODO: need to fix have to repeat
+const COLORS = {
+  blue: "bg-blue-100",
+  red: "bg-red-100",
+  green: "bg-green-100",
+  yellow: "bg-yellow-100",
+  purple: "bg-purple-100",
+  pink: "bg-pink-100",
+  indigo: "bg-indigo-100",
+  gray: "bg-gray-100"
+};
+
 const Timetable: React.FC = () => {
   const [events, setEvents] = useState<EventWithColor[]>([]);
 
@@ -53,7 +65,7 @@ const Timetable: React.FC = () => {
               .map((event, i) => (
                 <div
                   key={i}
-                  className={`${COLORS_TW[event.color] || COLORS_TW.blue} text-blue-800 p-3 rounded shadow-sm border border-gray-200 w-full break-words`}
+                  className={`${COLORS[event.color] || COLORS.blue} text-blue-800 p-3 rounded shadow-sm border border-gray-200 w-full break-words`}
                 >
                   <p className="font-medium text-lg">{event.title}</p>
                   <p className="text-sm">{event.time}</p>
