@@ -1,18 +1,10 @@
-export function getRandomTailwindBgClass(): string {
-  const colors = [
-    "blue",
-    "red",
-    "green",
-    "yellow",
-    "purple",
-    "pink",
-    "indigo",
-    "gray",
-  ];
+import { COLORS_TW } from "./constants";
 
-  // Randomly pick a color from the colors array
-  const randomColor = colors[Math.floor(Math.random() * colors.length)];
+export function getRandomTailwindBgClass(): keyof typeof COLORS_TW {
+  const colorKeys = Object.keys(COLORS_TW) as Array<keyof typeof COLORS_TW>;
 
-  // Return the full Tailwind class name
-  return randomColor;
+  const randomColorKey =
+    colorKeys[Math.floor(Math.random() * colorKeys.length)];
+
+  return randomColorKey;
 }

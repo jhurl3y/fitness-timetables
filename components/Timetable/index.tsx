@@ -3,21 +3,30 @@ import React, { useEffect, useState } from 'react';
 import { Event } from '../../lib/types';
 import { days } from '../../lib/constants';
 import { convertTimeTo24Hour } from '../../lib/time';
-
-const COLORS = {
-  blue: "bg-blue-100",
-  red: "bg-red-100",
-  green: "bg-green-100",
-  yellow: "bg-yellow-100",
-  purple: "bg-purple-100",
-  pink: "bg-pink-100",
-  indigo: "bg-indigo-100",
-  gray: "bg-gray-100"
-};
+import { getRandomTailwindBgClass } from "../../lib/utils";
+import { COLORS_TW } from "../../lib/constants";
 
 type EventWithColor = Event & {
-  color: keyof typeof COLORS; // Narrow the color type to match the COLORS keys
+  color: keyof typeof COLORS_TW; // Use color keys from COLORS_TW
 };
+
+// Function to assign colors to events based on their type
+function addColorToEvents(events: Event[]): EventWithColor[] {
+  const colorMap: { [key: string]: keyof typeof COLORS_TW } = {}; // A map to store the color for each event type
+
+  return events.map((event) => {
+    // If the event type doesn't have a color yet, assign a random one
+    if (!colorMap[event.type]) {
+      colorMap[event.type] = getRandomTailwindBgClass();
+    }
+
+    // Return the event with the assigned color based on its type
+    return {
+      ...event,
+      color: colorMap[event.type], // Use color key from COLORS_TW
+    };
+  });
+}
 
 const Timetable: React.FC = () => {
   const [events, setEvents] = useState<EventWithColor[]>([]);
@@ -26,7 +35,7 @@ const Timetable: React.FC = () => {
     const fetchEvents = async () => {
       const res = await fetch('/api/timetable');
       const { data } = await res.json();
-      setEvents(data);
+      setEvents(addColorToEvents(data));
     };
 
     fetchEvents();
@@ -44,7 +53,7 @@ const Timetable: React.FC = () => {
               .map((event, i) => (
                 <div
                   key={i}
-                  className={`${COLORS[event.color] || COLORS.blue} text-blue-800 p-3 rounded shadow-sm border border-gray-200 w-full break-words`}
+                  className={`${COLORS_TW[event.color] || COLORS_TW.blue} text-blue-800 p-3 rounded shadow-sm border border-gray-200 w-full break-words`}
                 >
                   <p className="font-medium text-lg">{event.title}</p>
                   <p className="text-sm">{event.time}</p>

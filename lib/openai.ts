@@ -45,6 +45,7 @@ export async function generateEvents(
   title: string; // The name of the class or event
   time: string;  // The time the event takes place
   day: number;   // The day of the week as a number where 0 = Monday, 1 = Tuesday, 2 = Wednesday, 3 = Thursday, 4 = Friday, 5 = Saturday, 6 = Sunday.
+  type: string   // the type of class
 `;
 
   const exampleEvent = `
@@ -52,6 +53,7 @@ export async function generateEvents(
     title: "Jiu Jitsu All Levels",
     time: "10:00 AM - 11:00 AM",
     day: 0 // Monday
+    type: "bjj"
   }
 `;
 
@@ -61,6 +63,7 @@ export async function generateEvents(
         title: z.string(),
         time: z.string(),
         day: z.number(),
+        type: z.string(),
       })
     ),
   });

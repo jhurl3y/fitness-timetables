@@ -53,6 +53,7 @@ function parseEvents(data: any): Event[] {
           title: `${classInfo.name} - ${locationName} (${trainerName})`, // Append the location name and trainer name to the title
           time: startTime,
           day: day === 0 ? 6 : day - 1, // Adjust so that 0 is Monday, 6 is Sunday
+          type: "hiit",
         };
       })
   );
