@@ -1,4 +1,4 @@
-import { HIIT_VENUE } from "./constants";
+import { HIIT_VENUE, TIMEZONE } from "./constants";
 import { generateCustomWeekDates } from "./time";
 import { Event } from "./types";
 
@@ -22,6 +22,30 @@ async function fetchScheduleData(venue: number, date: string): Promise<any> {
   return response;
 }
 
+function getDayWithTz(theDate: Date) {
+  // Use Intl.DateTimeFormat to get the day in the 'America/Los_Angeles' timezone
+  const formatter = new Intl.DateTimeFormat("en-US", {
+    weekday: "short",
+    timeZone: TIMEZONE,
+  });
+
+  // Get the day as a string ("Mon", "Tue", etc.)
+  const dayInPacific = formatter.format(theDate);
+
+  // Convert day string into a number (0 = Monday, 6 = Sunday)
+  const dayMap: { [key: string]: number } = {
+    Mon: 0,
+    Tue: 1,
+    Wed: 2,
+    Thu: 3,
+    Fri: 4,
+    Sat: 5,
+    Sun: 6,
+  };
+
+  return dayMap[dayInPacific];
+}
+
 // Function to parse the fetched data into Event[] format and filter out "Boxing" events
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function parseEvents(data: any): Event[] {
@@ -39,21 +63,20 @@ function parseEvents(data: any): Event[] {
         const locationName = venueInfo.location?.name || "Unknown Location"; // Fetch the location name, default to 'Unknown'
 
         // Convert Unix timestamps to human-readable time (HH:MM AM/PM) in Pacific Time (PST/PDT)
-        const startTime = new Date(
-          schedule.starttime * 1000
-        ).toLocaleTimeString("en-US", {
+        const theDate = new Date(schedule.starttime * 1000);
+        const startTime = theDate.toLocaleTimeString("en-US", {
           hour: "2-digit",
           minute: "2-digit",
-          timeZone: "America/Los_Angeles", // Force the time zone to be PST/PDT
+          timeZone: TIMEZONE, // Force the time zone to be PST/PDT
         });
 
         // Convert the start time to the corresponding day (0 for Monday, 6 for Sunday)
-        const day = new Date(schedule.starttime * 1000).getDay();
+        const day = getDayWithTz(theDate);
 
         return {
           title: `${classInfo.name} - ${locationName} (${trainerName})`, // Append the location name and trainer name to the title
           time: startTime,
-          day: day === 0 ? 6 : day - 1, // Adjust so that 0 is Monday, 6 is Sunday
+          day: day,
           type: "hiit",
         };
       })

@@ -4,11 +4,11 @@ import { Event } from '../../lib/types';
 import { days } from '../../lib/constants';
 import { convertTimeTo24Hour } from '../../lib/time';
 import { getRandomTailwindBgClass } from "../../lib/utils";
-import { COLORS_TW } from "../../lib/constants";
+import { COLORS_TW, TIMEZONE } from "../../lib/constants";
 
 function getCurrentDayInPST(): number {
   const pstDate = new Date(
-    new Intl.DateTimeFormat("en-US", { timeZone: "America/Los_Angeles" }).format(new Date())
+    new Intl.DateTimeFormat("en-US", { timeZone: TIMEZONE }).format(new Date())
   );
   const day = pstDate.getDay(); // Sunday = 0, Monday = 1, etc.
 

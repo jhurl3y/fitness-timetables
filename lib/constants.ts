@@ -10,3 +10,4 @@ export const COLORS_TW = {
   indigo: "bg-indigo-100",
   gray: "bg-gray-100",
 };
+export const TIMEZONE = "America/Los_Angeles";

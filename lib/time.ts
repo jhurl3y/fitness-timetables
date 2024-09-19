@@ -1,10 +1,11 @@
 import { Event } from "./types";
+import { TIMEZONE } from "./constants";
 
 // Helper function to get the current date in PST
 function getPSTDate(): Date {
   const date = new Date();
   const pstDateString = new Intl.DateTimeFormat("en-US", {
-    timeZone: "America/Los_Angeles",
+    timeZone: TIMEZONE,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
