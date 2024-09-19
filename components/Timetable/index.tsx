@@ -55,6 +55,13 @@ const Timetable: React.FC = () => {
   const [events, setEvents] = useState<EventWithColor[]>([]);
   const currentDayRef = useRef<HTMLDivElement | null>(null); // Ref for the current day
 
+  const scrollToDay = () => {
+    // Scroll to the current day when the events are fetched
+    if (currentDayRef.current) {
+      currentDayRef.current.scrollIntoView({ behavior: 'smooth', block: "center", inline: "nearest" });
+    }
+  };
+
   useEffect(() => {
     const fetchEvents = async () => {
       const res = await fetch('/api/timetable');
@@ -63,12 +70,13 @@ const Timetable: React.FC = () => {
     };
 
     fetchEvents();
-
-    // Scroll to the current day when the events are fetched
-    if (currentDayRef.current) {
-      currentDayRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
   }, []);
+
+  useEffect(() => {
+    if (events.length > 0){
+      scrollToDay();
+    }
+  }, [events]);
 
   const currentDay = getCurrentDayInPST(); // Get the current day in PST
 
