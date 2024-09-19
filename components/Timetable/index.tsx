@@ -2,19 +2,9 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Event } from '../../lib/types';
 import { days } from '../../lib/constants';
-import { convertTimeTo24Hour } from '../../lib/time';
+import { convertTimeTo24Hour, getDayWithTz } from '../../lib/time';
 import { getRandomTailwindBgClass } from "../../lib/utils";
 import { COLORS_TW, TIMEZONE } from "../../lib/constants";
-
-function getCurrentDayInPST(): number {
-  const pstDate = new Date(
-    new Intl.DateTimeFormat("en-US", { timeZone: TIMEZONE }).format(new Date())
-  );
-  const day = pstDate.getDay(); // Sunday = 0, Monday = 1, etc.
-
-  // Adjust so that Monday = 0, ..., Sunday = 6
-  return (day === 0) ? 6 : day - 1;
-}
 
 
 type EventWithColor = Event & {
@@ -81,7 +71,7 @@ const Timetable: React.FC = () => {
     }
   }, [events]);
 
-  const currentDay = getCurrentDayInPST(); // Get the current day in PST
+  const currentDay = getDayWithTz(); // Get the current day in PST
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 p-4">
