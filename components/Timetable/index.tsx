@@ -56,9 +56,12 @@ const Timetable: React.FC = () => {
   const currentDayRef = useRef<HTMLDivElement | null>(null); // Ref for the current day
 
   const scrollToDay = () => {
-    // Scroll to the current day when the events are fetched
-    if (currentDayRef.current) {
-      currentDayRef.current.scrollIntoView({ behavior: 'smooth', block: "center", inline: "nearest" });
+    // Check if the device is mobile based on screen width (you can adjust the width as per your needs)
+    const isMobile = window.innerWidth <= 768; // 768px is a common breakpoint for mobile devices
+  
+    // Scroll to the current day only on mobile
+    if (isMobile && currentDayRef.current) {
+      currentDayRef.current.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
     }
   };
 
