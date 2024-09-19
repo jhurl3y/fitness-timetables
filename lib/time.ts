@@ -1,6 +1,30 @@
 import { Event } from "./types";
 import { TIMEZONE } from "./constants";
 
+export function getDayWithTz(theDate: Date) {
+  // Use Intl.DateTimeFormat to get the day in the 'America/Los_Angeles' timezone
+  const formatter = new Intl.DateTimeFormat("en-US", {
+    weekday: "short",
+    timeZone: TIMEZONE,
+  });
+
+  // Get the day as a string ("Mon", "Tue", etc.)
+  const dayInPacific = formatter.format(theDate);
+
+  // Convert day string into a number (0 = Monday, 6 = Sunday)
+  const dayMap: { [key: string]: number } = {
+    Mon: 0,
+    Tue: 1,
+    Wed: 2,
+    Thu: 3,
+    Fri: 4,
+    Sat: 5,
+    Sun: 6,
+  };
+
+  return dayMap[dayInPacific];
+}
+
 // Helper function to get the current date in PST
 function getPSTDate(): Date {
   const date = new Date();

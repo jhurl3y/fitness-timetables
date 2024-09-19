@@ -1,5 +1,5 @@
 import { HIIT_VENUE, TIMEZONE } from "./constants";
-import { generateCustomWeekDates } from "./time";
+import { generateCustomWeekDates, getDayWithTz } from "./time";
 import { Event } from "./types";
 
 // Function to fetch data from the API
@@ -20,30 +20,6 @@ async function fetchScheduleData(venue: number, date: string): Promise<any> {
 
   const response = await res.json();
   return response;
-}
-
-function getDayWithTz(theDate: Date) {
-  // Use Intl.DateTimeFormat to get the day in the 'America/Los_Angeles' timezone
-  const formatter = new Intl.DateTimeFormat("en-US", {
-    weekday: "short",
-    timeZone: TIMEZONE,
-  });
-
-  // Get the day as a string ("Mon", "Tue", etc.)
-  const dayInPacific = formatter.format(theDate);
-
-  // Convert day string into a number (0 = Monday, 6 = Sunday)
-  const dayMap: { [key: string]: number } = {
-    Mon: 0,
-    Tue: 1,
-    Wed: 2,
-    Thu: 3,
-    Fri: 4,
-    Sat: 5,
-    Sun: 6,
-  };
-
-  return dayMap[dayInPacific];
 }
 
 // Function to parse the fetched data into Event[] format and filter out "Boxing" events
