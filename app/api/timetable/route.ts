@@ -36,7 +36,7 @@ export async function GET() {
     return new Response(JSON.stringify({ data: allEvents }), {
       headers: {
         "Content-Type": "application/json",
-        "Cache-Control": "s-maxage=300, stale-while-revalidate",
+        "Cache-Control": "s-maxage=3600, stale-while-revalidate",
       },
       status: 200,
       statusText: "OK",

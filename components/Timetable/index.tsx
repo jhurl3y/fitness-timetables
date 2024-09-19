@@ -64,7 +64,7 @@ const Timetable: React.FC = () => {
 
   useEffect(() => {
     const fetchEvents = async () => {
-      const res = await fetch('/api/timetable');
+      const res = await fetch('/api/timetable', { next: { revalidate: 3600 } });
       const { data } = await res.json();
       setEvents(addColorToEvents(data));
     };
