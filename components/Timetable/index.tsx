@@ -1,10 +1,21 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Event } from '../../lib/types';
 import { days } from '../../lib/constants';
 import { convertTimeTo24Hour } from '../../lib/time';
 import { getRandomTailwindBgClass } from "../../lib/utils";
 import { COLORS_TW } from "../../lib/constants";
+
+function getCurrentDayInPST(): number {
+  const pstDate = new Date(
+    new Intl.DateTimeFormat("en-US", { timeZone: "America/Los_Angeles" }).format(new Date())
+  );
+  const day = pstDate.getDay(); // Sunday = 0, Monday = 1, etc.
+
+  // Adjust so that Monday = 0, ..., Sunday = 6
+  return (day === 0) ? 6 : day - 1;
+}
+
 
 type EventWithColor = Event & {
   color: keyof typeof COLORS_TW; // Use color keys from COLORS_TW
@@ -42,6 +53,7 @@ const COLORS = {
 
 const Timetable: React.FC = () => {
   const [events, setEvents] = useState<EventWithColor[]>([]);
+  const currentDayRef = useRef<HTMLDivElement | null>(null); // Ref for the current day
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -51,12 +63,23 @@ const Timetable: React.FC = () => {
     };
 
     fetchEvents();
+
+    // Scroll to the current day when the events are fetched
+    if (currentDayRef.current) {
+      currentDayRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   }, []);
+
+  const currentDay = getCurrentDayInPST(); // Get the current day in PST
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 p-4">
       {days.map((day, index) => (
-        <div key={index} className="border p-4 min-h-[150px]">
+        <div
+          key={index}
+          ref={index === currentDay ? currentDayRef : null} // Assign ref to the current day
+          className={`border p-4 min-h-[150px] ${index === currentDay ? 'bg-cyan-100' : ''}`} // Optionally highlight the current day
+        >
           <h3 className="font-semibold text-lg sm:text-xl mb-4 text-gray-700">{day}</h3>
           <div className="space-y-4">
             {events
