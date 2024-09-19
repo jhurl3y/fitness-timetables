@@ -1,5 +1,21 @@
 import { Event } from "./types";
 
+// Helper function to get the current date in PST
+function getPSTDate(): Date {
+  const date = new Date();
+  const pstDateString = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Los_Angeles",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  }).format(date);
+
+  return new Date(pstDateString);
+}
+
 export function formatTime(events: Event[]) {
   return events?.map((event) => {
     event.time = event.time
@@ -22,30 +38,32 @@ export function convertTimeTo24Hour(time: string) {
 }
 
 export function generateCustomWeekDates(): string[] {
-  const today = new Date();
+  const today = getPSTDate();
   const currentDay = today.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
 
   // Array to store the final week dates
-  const dates: string[] = [];
+  const currentWeek: string[] = [];
+  const nextWeek: string[] = [];
 
   // Generate dates from today until Sunday (remaining days of the current week)
   for (let i = currentDay; i <= 6; i++) {
     const currentDate = new Date(today);
     currentDate.setDate(today.getDate() + (i - currentDay)); // Offset from today
-    dates.push(formatDateYYYYMMDD(currentDate));
+    currentWeek.push(formatDateYYYYMMDD(currentDate));
   }
 
   // Generate dates from the following Monday to yesterday (preceding days from the following week)
   for (let i = 0; i < currentDay; i++) {
     const currentDate = new Date(today);
     currentDate.setDate(today.getDate() + (7 - currentDay) + i); // Offset to next Monday
-    dates.push(formatDateYYYYMMDD(currentDate));
+    nextWeek.push(formatDateYYYYMMDD(currentDate));
   }
 
-  return dates;
+  // Return next week's dates first, followed by the current week's dates
+  return [...nextWeek, ...currentWeek];
 }
 
-// Helper function to format date as "YYYY-MM-DD"
+// Helper function to format date as "YYYY-MM-DD" in PST
 export function formatDateYYYYMMDD(date: Date): string {
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Month is zero-based

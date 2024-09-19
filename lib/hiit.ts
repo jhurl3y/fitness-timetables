@@ -63,7 +63,6 @@ function parseEvents(data: any): Event[] {
 // Function to get all HIIT events for the week (Monday to Sunday)
 export async function getWeeklyHIITEvents(): Promise<Event[]> {
   const weekDates = generateCustomWeekDates(); // Generate a list of dates from Monday to Sunday
-
   const allEvents: Event[] = [];
   for (const date of weekDates) {
     const data = await fetchScheduleData(HIIT_VENUE, date);
