@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Event } from '../../lib/types';
 import { days } from '../../lib/constants';
-import { convertTimeTo24Hour, getDayWithTz } from '../../lib/time';
+import { convertTimeTo24Hour, getCurrentDateInPST } from '../../lib/time';
 import { getRandomTailwindBgClass } from "../../lib/utils";
 import { COLORS_TW } from "../../lib/constants";
 
@@ -71,7 +71,7 @@ const Timetable: React.FC = () => {
     }
   }, [events]);
 
-  const currentDay = getDayWithTz(new Date()); // Get the current day in PST
+  const currentDay = getCurrentDateInPST();
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 p-4">

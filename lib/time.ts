@@ -1,6 +1,14 @@
 import { Event } from "./types";
 import { TIMEZONE } from "./constants";
 
+export function getCurrentDateInPST() {
+  const currentUTCDate = new Date();
+  const pstDate = new Date(
+    currentUTCDate.toLocaleString("en-US", { timeZone: TIMEZONE })
+  );
+  return getDayWithTz(pstDate);
+}
+
 export function getDayWithTz(theDate: Date) {
   // Use Intl.DateTimeFormat to get the day in the 'America/Los_Angeles' timezone
   const formatter = new Intl.DateTimeFormat("en-US", {
