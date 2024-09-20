@@ -3,7 +3,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Event } from '../../lib/types';
 import { days } from '../../lib/constants';
 import { convertTimeTo24Hour, getCurrentDateInPST } from '../../lib/time';
-import { getRandomTailwindBgClass } from "../../lib/utils";
 import { COLORS_TW } from "../../lib/constants";
 import SkeletonLoader from './SkeletonLoader'; // Import the SkeletonLoader
 
@@ -11,18 +10,26 @@ type EventWithColor = Event & {
   color: keyof typeof COLORS_TW; // Use color keys from COLORS_TW
 };
 
-// Function to assign colors to events based on their type
+const currentDay = getCurrentDateInPST();
+
+// Persistent color map to ensure consistent color assignment for each event type
+const colorMap: { [key: string]: keyof typeof COLORS_TW } = {};
+
+// Function to assign colors to events based on their type using COLORS_TW
 function addColorToEvents(events: Event[]): EventWithColor[] {
-  const colorMap: { [key: string]: keyof typeof COLORS_TW } = {}; // A map to store the color for each event type
+  const availableColors = Object.keys(COLORS_TW) as (keyof typeof COLORS_TW)[]; // Get available color keys
+  let colorIndex = 0;
 
   return events.map((event) => {
+    // Assign a unique color to each event type if not already assigned
     if (!colorMap[event.type]) {
-      colorMap[event.type] = getRandomTailwindBgClass();
+      colorMap[event.type] = availableColors[colorIndex % availableColors.length];
+      colorIndex++;
     }
 
     return {
       ...event,
-      color: colorMap[event.type],
+      color: colorMap[event.type], // Use the stored color for this event type
     };
   });
 }
@@ -54,7 +61,8 @@ const Timetable: React.FC = () => {
     const fetchEvents = async () => {
       const res = await fetch('/api/timetable', { next: { revalidate: 3600 } });
       const { data } = await res.json();
-      setEvents(addColorToEvents(data));
+
+      setEvents(addColorToEvents(data)); // Assign colors consistently
       setLoading(false); // Stop loading once events are fetched
     };
 
@@ -66,8 +74,6 @@ const Timetable: React.FC = () => {
       scrollToDay();
     }
   }, [events]);
-
-  const currentDay = getCurrentDateInPST();
 
   if (loading) {
     return <SkeletonLoader />; // Show skeleton loader while loading
