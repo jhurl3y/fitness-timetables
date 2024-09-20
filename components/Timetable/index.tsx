@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Event } from '../../lib/types';
 import { days } from '../../lib/constants';
-import { convertTimeTo24Hour, getCurrentDateInPST } from '../../lib/time';
+import { convertTimeTo24Hour, getCurrentDateInPST, getDayWithTz } from '../../lib/time';
 import { COLORS_TW } from "../../lib/constants";
 import SkeletonLoader from './SkeletonLoader'; // Import the SkeletonLoader
 
@@ -10,7 +10,7 @@ type EventWithColor = Event & {
   color: keyof typeof COLORS_TW; // Use color keys from COLORS_TW
 };
 
-const currentDay = getCurrentDateInPST();
+const currentDay = getDayWithTz(getCurrentDateInPST());
 
 // Persistent color map to ensure consistent color assignment for each event type
 const colorMap: { [key: string]: keyof typeof COLORS_TW } = {};

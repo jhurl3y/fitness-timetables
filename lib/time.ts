@@ -1,12 +1,35 @@
 import { Event } from "./types";
 import { TIMEZONE } from "./constants";
 
+export function getWeekRange() {
+  const currentDate = getCurrentDateInPST();
+
+  // Get the day of the week (0 = Sunday, 1 = Monday, etc.)
+  const currentDay = getDayWithTz(currentDate);
+
+  // Calculate the offset to get Monday and Sunday based on the custom format
+  const mondayOffset = -currentDay; // 0 means today is Monday, 1 means shift back to Monday, etc.
+  const sundayOffset = 6 - currentDay; // 6 is Sunday in the custom format
+
+  // Get Monday and Sunday dates
+  const monday = new Date(currentDate);
+  const sunday = new Date(currentDate);
+
+  monday.setDate(currentDate.getDate() + mondayOffset);
+  sunday.setDate(currentDate.getDate() + sundayOffset);
+
+  return {
+    dateMon: formatDate(monday),
+    dateSun: formatDate(sunday),
+  };
+}
+
 export function getCurrentDateInPST() {
   const currentUTCDate = new Date();
   const pstDate = new Date(
     currentUTCDate.toLocaleString("en-US", { timeZone: TIMEZONE })
   );
-  return getDayWithTz(pstDate);
+  return pstDate;
 }
 
 export function getDayWithTz(theDate: Date) {
@@ -103,3 +126,11 @@ export function formatDateYYYYMMDD(date: Date): string {
   const day = date.getDate().toString().padStart(2, "0");
   return `${year}-${month}-${day}`;
 }
+
+// Format the dates as mm/dd/yyyy
+export const formatDate = (date: Date) => {
+  const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-indexed
+  const day = date.getDate().toString().padStart(2, "0");
+  const year = date.getFullYear();
+  return `${month}/${day}/${year}`;
+};
