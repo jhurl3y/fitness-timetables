@@ -71,7 +71,7 @@ const Timetable: React.FC = () => {
     }
   }, [events]);
 
-  const currentDay = getDayWithTz(); // Get the current day in PST
+  const currentDay = getDayWithTz(new Date()); // Get the current day in PST
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 p-4">
