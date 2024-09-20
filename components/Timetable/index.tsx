@@ -4,7 +4,7 @@ import { Event } from '../../lib/types';
 import { days } from '../../lib/constants';
 import { convertTimeTo24Hour, getDayWithTz } from '../../lib/time';
 import { getRandomTailwindBgClass } from "../../lib/utils";
-import { COLORS_TW, TIMEZONE } from "../../lib/constants";
+import { COLORS_TW } from "../../lib/constants";
 
 
 type EventWithColor = Event & {
