@@ -1,7 +1,5 @@
-import { generateEvents } from "../../../lib/events";
-import { getHTMLFromURL } from "../../../lib/scraping";
 import { formatTime } from "../../../lib/time";
-import { TIMETABLE_URLS } from "../../../lib/constants";
+import { getWeeklyHIITEvents } from "../../../lib/hiit";
 // import { schedule } from "../../../data/schedule";
 
 /**
@@ -13,16 +11,9 @@ export const runtime = "edge";
 
 export async function GET() {
   try {
-    const eventsArray = await Promise.all(
-      TIMETABLE_URLS.map(async (url) => {
-        const htmlContent = await getHTMLFromURL(url);
-        const events = await generateEvents(htmlContent);
-
-        // Add random background color to each event
-        return events ? events : [];
-      })
-    );
-    const allEvents = formatTime(eventsArray.flat());
+    // Fetch the HIIT events for the week
+    const weeklyHIITEvents = await getWeeklyHIITEvents();
+    const allEvents = formatTime(weeklyHIITEvents);
 
     return new Response(JSON.stringify({ data: allEvents }), {
       headers: {

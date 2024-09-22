@@ -1,4 +1,4 @@
-import { HIIT_VENUE, TIMEZONE } from "./constants";
+import { HIIT_VENUE, HIIT_VENUE_MISSION, TIMEZONE } from "./constants";
 import { generateCustomWeekDates, getDayWithTz } from "./time";
 import { Event } from "./types";
 

@@ -17,11 +17,10 @@ const colorMap: { [key: string]: keyof typeof COLORS_TW } = {};
 
 // Function to assign colors to events based on their type using COLORS_TW
 function addColorToEvents(events: Event[]): EventWithColor[] {
-  const availableColors = Object.keys(COLORS_TW) as (keyof typeof COLORS_TW)[]; // Get available color keys
+  const availableColors = Object.keys(COLORS_TW) as (keyof typeof COLORS_TW)[];
   let colorIndex = 0;
 
   return events.map((event) => {
-    // Assign a unique color to each event type if not already assigned
     if (!colorMap[event.type]) {
       colorMap[event.type] = availableColors[colorIndex % availableColors.length];
       colorIndex++;
@@ -29,7 +28,7 @@ function addColorToEvents(events: Event[]): EventWithColor[] {
 
     return {
       ...event,
-      color: colorMap[event.type], // Use the stored color for this event type
+      color: colorMap[event.type], 
     };
   });
 }
@@ -47,7 +46,7 @@ const COLORS = {
 
 const Timetable: React.FC = () => {
   const [events, setEvents] = useState<EventWithColor[]>([]);
-  const [loading, setLoading] = useState<boolean>(true); // Add loading state
+  const [loading, setLoading] = useState<boolean>(true); 
   const currentDayRef = useRef<HTMLDivElement | null>(null);
 
   const scrollToDay = () => {
@@ -59,11 +58,28 @@ const Timetable: React.FC = () => {
 
   useEffect(() => {
     const fetchEvents = async () => {
-      const res = await fetch('/api/timetable', { next: { revalidate: 3600 } });
-      const { data } = await res.json();
+      setLoading(true);
+      
+      try {
+        // Fetch both APIs concurrently
+        const [timetableRes, hiitRes] = await Promise.all([
+          fetch('/api/timetable', { next: { revalidate: 3600 } }),
+          fetch('/api/hiit', { next: { revalidate: 3600 } }),
+        ]);
 
-      setEvents(addColorToEvents(data)); // Assign colors consistently
-      setLoading(false); // Stop loading once events are fetched
+        const { data: timetableEvents } = await timetableRes.json();
+        const { data: hiitEvents } = await hiitRes.json();
+
+        // Combine events from both sources
+        const combinedEvents = [...timetableEvents, ...hiitEvents];
+
+        // Assign colors to events
+        setEvents(addColorToEvents(combinedEvents));
+      } catch (error) {
+        console.error("Failed to fetch events:", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchEvents();
@@ -76,7 +92,7 @@ const Timetable: React.FC = () => {
   }, [events]);
 
   if (loading) {
-    return <SkeletonLoader />; // Show skeleton loader while loading
+    return <SkeletonLoader />;
   }
 
   return (
