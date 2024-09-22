@@ -1,18 +1,19 @@
 import { formatTime } from "../../../lib/time";
 import { getWeeklyHIITEvents } from "../../../lib/hiit";
-// import { schedule } from "../../../data/schedule";
 
-/**
- * The runtime environment.
- *
- * @see https://nextjs.org/docs/app/building-your-application/rendering/edge-and-nodejs-runtimes#edge-runtime
- */
 export const runtime = "edge";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    // Fetch the HIIT events for the week
-    const weeklyHIITEvents = await getWeeklyHIITEvents();
+    // Parse URL to get the venue_id from query parameters
+    const url = new URL(request.url);
+    const venueIdParam = url.searchParams.get("venue_id");
+
+    // Convert venue_id to a number, or return an error if invalid
+    const venueId = venueIdParam ? Number(venueIdParam) : undefined;
+
+    // Fetch the HIIT events for the week, optionally filtering by venue_id
+    const weeklyHIITEvents = await getWeeklyHIITEvents(venueId); // Assuming your getWeeklyHIITEvents can take a venueId as a param
     const allEvents = formatTime(weeklyHIITEvents);
 
     return new Response(JSON.stringify({ data: allEvents }), {

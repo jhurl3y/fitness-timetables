@@ -1,4 +1,4 @@
-import { HIIT_VENUE, HIIT_VENUE_MISSION, TIMEZONE } from "./constants";
+import { HIIT_VENUE, TIMEZONE } from "./constants";
 import { generateCustomWeekDates, getDayWithTz } from "./time";
 import { Event } from "./types";
 
@@ -60,11 +60,13 @@ function parseEvents(data: any): Event[] {
 }
 
 // Function to get all HIIT events for the week (Monday to Sunday)
-export async function getWeeklyHIITEvents(): Promise<Event[]> {
+export async function getWeeklyHIITEvents(
+  venueId: number = HIIT_VENUE
+): Promise<Event[]> {
   const weekDates = generateCustomWeekDates(); // Generate a list of dates from Monday to Sunday
   const allEvents: Event[] = [];
   for (const date of weekDates) {
-    const data = await fetchScheduleData(HIIT_VENUE, date);
+    const data = await fetchScheduleData(venueId, date);
     const dailyEvents = parseEvents(data);
     allEvents.push(...dailyEvents); // Append daily events to the full list
   }
