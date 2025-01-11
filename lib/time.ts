@@ -95,28 +95,17 @@ export function convertTimeTo24Hour(time: string) {
 
 export function generateCustomWeekDates(): string[] {
   const today = getPSTDate();
-  const currentDay = today.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+  const dates: string[] = [];
 
-  // Array to store the final week dates
-  const currentWeek: string[] = [];
-  const nextWeek: string[] = [];
-
-  // Generate dates from today until Sunday (remaining days of the current week)
-  for (let i = currentDay; i <= 6; i++) {
+  // Generate 7 days starting from today
+  for (let i = 0; i < 7; i++) {
     const currentDate = new Date(today);
-    currentDate.setDate(today.getDate() + (i - currentDay)); // Offset from today
-    currentWeek.push(formatDateYYYYMMDD(currentDate));
+    // for today need to fast forward to following week
+    currentDate.setDate(i == 0 ? today.getDate() + 7 : today.getDate() + i); // Add i days to today
+    dates.push(formatDateYYYYMMDD(currentDate));
   }
 
-  // Generate dates from the following Monday to yesterday (preceding days from the following week)
-  for (let i = 0; i < currentDay; i++) {
-    const currentDate = new Date(today);
-    currentDate.setDate(today.getDate() + (7 - currentDay) + i); // Offset to next Monday
-    nextWeek.push(formatDateYYYYMMDD(currentDate));
-  }
-
-  // Return next week's dates first, followed by the current week's dates
-  return [...nextWeek, ...currentWeek];
+  return dates;
 }
 
 // Helper function to format date as "YYYY-MM-DD" in PST

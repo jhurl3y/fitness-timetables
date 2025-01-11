@@ -12,8 +12,8 @@ async function fetchScheduleData(venue: number, date: string): Promise<any> {
     },
     body: JSON.stringify({
       date: date,
-      report_ineligible_classes: true,
-      exclude_past_booking: true,
+      report_ineligible_classes: false,
+      exclude_past_booking: false,
       venue: [venue],
     }),
   });
