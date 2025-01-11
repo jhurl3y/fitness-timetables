@@ -28,7 +28,7 @@ function addColorToEvents(events: Event[]): EventWithColor[] {
 
     return {
       ...event,
-      color: colorMap[event.type], 
+      color: colorMap[event.type],
     };
   });
 }
@@ -61,7 +61,7 @@ const fetchHIITEvents = async (venue: string) => {
 const Timetable: React.FC = () => {
   const [events, setEvents] = useState<EventWithColor[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [selectedVenue, setSelectedVenue] = useState<string>(HIIT_VENUE.toString()); // State to track selected venue
+  const [selectedVenue, setSelectedVenue] = useState<string>(HIIT_VENUE_MISSION.toString()); // State to track selected venue
   const currentDayRef = useRef<HTMLDivElement | null>(null);
 
   const scrollToDay = () => {
@@ -115,13 +115,15 @@ const Timetable: React.FC = () => {
   return (
     <div className="p-4">
       {/* Dropdown to select venue */}
-      <div className="mb-4">
-        <label htmlFor="venue" className="font-semibold text-lg">Select Venue:</label>
+      <div className="mb-6 flex items-center justify-start bg-gray-100 p-4 rounded-lg shadow-sm">
+        <label htmlFor="venue" className="font-semibold text-lg text-gray-800 mr-3">
+          Select Venue:
+        </label>
         <select
           id="venue"
           value={selectedVenue}
           onChange={handleVenueChange}
-          className="ml-2 p-2 border border-gray-300 rounded"
+          className="px-4 py-2 border border-gray-300 rounded-md bg-white text-gray-900 font-medium shadow-sm hover:border-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-colors duration-200"
         >
           <option value={HIIT_VENUE}>HIIT Nob Hill</option>
           <option value={HIIT_VENUE_MISSION}>HIIT Mission</option>
