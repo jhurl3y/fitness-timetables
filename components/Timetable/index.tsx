@@ -113,7 +113,7 @@ const Timetable: React.FC = () => {
   }
 
   return (
-    <div className="p-4">
+    <div className="p-2 sm:p-4">
       {/* Dropdown to select venue */}
       <div className="mb-6 flex items-center justify-start bg-dropdown-bg p-4 rounded-lg shadow-sm border border-card-border">
         <label htmlFor="venue" className="font-semibold text-lg text-foreground mr-3">
@@ -131,7 +131,7 @@ const Timetable: React.FC = () => {
       </div>
 
       {/* Timetable grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-7 gap-2 sm:gap-4">
         {days.map((day, index) => (
           <div
             key={index}
