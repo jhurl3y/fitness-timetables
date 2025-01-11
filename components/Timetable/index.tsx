@@ -115,18 +115,18 @@ const Timetable: React.FC = () => {
   return (
     <div className="p-4">
       {/* Dropdown to select venue */}
-      <div className="mb-6 flex items-center justify-start bg-gray-100 p-4 rounded-lg shadow-sm">
-        <label htmlFor="venue" className="font-semibold text-lg text-gray-800 mr-3">
+      <div className="mb-6 flex items-center justify-start bg-dropdown-bg p-4 rounded-lg shadow-sm border border-card-border">
+        <label htmlFor="venue" className="font-semibold text-lg text-foreground mr-3">
           Select Venue:
         </label>
         <select
           id="venue"
           value={selectedVenue}
           onChange={handleVenueChange}
-          className="px-4 py-2 border border-gray-300 rounded-md bg-white text-gray-900 font-medium shadow-sm hover:border-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-colors duration-200"
+          className="px-4 py-2 border border-card-border rounded-md bg-card-background text-foreground font-medium shadow-sm hover:border-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-colors duration-200"
         >
-          <option value={HIIT_VENUE}>HIIT Nob Hill</option>
           <option value={HIIT_VENUE_MISSION}>HIIT Mission</option>
+          <option value={HIIT_VENUE}>HIIT Nob Hill</option>
         </select>
       </div>
 
@@ -136,9 +136,10 @@ const Timetable: React.FC = () => {
           <div
             key={index}
             ref={index === currentDay ? currentDayRef : null}
-            className={`border p-4 min-h-[150px] ${index === currentDay ? 'bg-cyan-100' : ''}`}
+            className={`border border-card-border p-4 min-h-[150px] rounded-lg bg-card-background ${index === currentDay ? 'bg-highlight' : ''
+              }`}
           >
-            <h3 className="font-semibold text-lg sm:text-xl mb-4 text-gray-700">{day}</h3>
+            <h3 className="font-semibold text-lg sm:text-xl mb-4 text-foreground">{day}</h3>
             <div className="space-y-4">
               {events
                 .filter((event) => event.day === index)
@@ -146,10 +147,10 @@ const Timetable: React.FC = () => {
                 .map((event, i) => (
                   <div
                     key={i}
-                    className={`${COLORS[event.color] || COLORS.blue} text-blue-800 p-3 rounded shadow-sm border border-gray-200 w-full break-words`}
+                    className={`${COLORS[event.color] || COLORS.blue} text-gray-800 dark:text-gray-200 p-3 rounded shadow-sm border border-card-border w-full break-words bg-opacity-10 dark:bg-opacity-20`}
                   >
                     <p className="font-medium text-lg">{event.title}</p>
-                    <p className="text-sm">{event.time}</p>
+                    <p className="text-sm opacity-90">{event.time}</p>
                   </div>
                 ))}
             </div>
