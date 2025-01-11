@@ -28,7 +28,7 @@ function addColorToEvents(events: Event[]): EventWithColor[] {
 
     return {
       ...event,
-      color: colorMap[event.type], 
+      color: colorMap[event.type],
     };
   });
 }
@@ -61,7 +61,7 @@ const fetchHIITEvents = async (venue: string) => {
 const Timetable: React.FC = () => {
   const [events, setEvents] = useState<EventWithColor[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [selectedVenue, setSelectedVenue] = useState<string>(HIIT_VENUE.toString()); // State to track selected venue
+  const [selectedVenue, setSelectedVenue] = useState<string>(HIIT_VENUE_MISSION.toString()); // State to track selected venue
   const currentDayRef = useRef<HTMLDivElement | null>(null);
 
   const scrollToDay = () => {
@@ -113,30 +113,33 @@ const Timetable: React.FC = () => {
   }
 
   return (
-    <div className="p-4">
+    <div className="p-2 sm:p-4">
       {/* Dropdown to select venue */}
-      <div className="mb-4">
-        <label htmlFor="venue" className="font-semibold text-lg">Select Venue:</label>
+      <div className="mb-6 flex items-center justify-start bg-dropdown-bg p-4 rounded-lg shadow-sm border border-card-border">
+        <label htmlFor="venue" className="font-semibold text-lg text-foreground mr-3">
+          Select Venue:
+        </label>
         <select
           id="venue"
           value={selectedVenue}
           onChange={handleVenueChange}
-          className="ml-2 p-2 border border-gray-300 rounded"
+          className="px-4 py-2 border border-card-border rounded-md bg-card-background text-foreground font-medium shadow-sm hover:border-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-colors duration-200"
         >
-          <option value={HIIT_VENUE}>HIIT Nob Hill</option>
           <option value={HIIT_VENUE_MISSION}>HIIT Mission</option>
+          <option value={HIIT_VENUE}>HIIT Nob Hill</option>
         </select>
       </div>
 
       {/* Timetable grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-7 gap-2 sm:gap-4">
         {days.map((day, index) => (
           <div
             key={index}
             ref={index === currentDay ? currentDayRef : null}
-            className={`border p-4 min-h-[150px] ${index === currentDay ? 'bg-cyan-100' : ''}`}
+            className={`border border-card-border p-4 min-h-[150px] rounded-lg bg-card-background ${index === currentDay ? 'bg-highlight' : ''
+              }`}
           >
-            <h3 className="font-semibold text-lg sm:text-xl mb-4 text-gray-700">{day}</h3>
+            <h3 className="font-semibold text-lg sm:text-xl mb-4 text-foreground">{day}</h3>
             <div className="space-y-4">
               {events
                 .filter((event) => event.day === index)
@@ -144,10 +147,10 @@ const Timetable: React.FC = () => {
                 .map((event, i) => (
                   <div
                     key={i}
-                    className={`${COLORS[event.color] || COLORS.blue} text-blue-800 p-3 rounded shadow-sm border border-gray-200 w-full break-words`}
+                    className={`${COLORS[event.color] || COLORS.blue} text-gray-800 dark:text-gray-200 p-3 rounded shadow-sm border border-card-border w-full break-words bg-opacity-10 dark:bg-opacity-20`}
                   >
                     <p className="font-medium text-lg">{event.title}</p>
-                    <p className="text-sm">{event.time}</p>
+                    <p className="text-sm opacity-90">{event.time}</p>
                   </div>
                 ))}
             </div>

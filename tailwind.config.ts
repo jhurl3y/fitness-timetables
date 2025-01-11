@@ -11,6 +11,10 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        "card-background": "var(--card-background)",
+        "card-border": "var(--card-border)",
+        highlight: "var(--highlight)",
+        "dropdown-bg": "var(--dropdown-bg)",
       },
     },
   },

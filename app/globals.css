@@ -5,12 +5,20 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --card-background: #ffffff;
+  --card-border: #e5e7eb;
+  --highlight: #cffafe;
+  --dropdown-bg: #f3f4f6;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --card-background: #1a1a1a;
+    --card-border: #2d2d2d;
+    --highlight: #164e63;
+    --dropdown-bg: #262626;
   }
 }
 
