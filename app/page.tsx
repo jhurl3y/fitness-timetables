@@ -1,3 +1,4 @@
+"use client";
 import Timetable from "../components/Timetable";
 import { getWeekRange } from '../lib/time';
 
